@@ -1,0 +1,29 @@
+class Solution {
+    public boolean PredictTheWinner(int[] nums) {
+        int n = nums.length;
+        int [][] dp = new int[n][n];
+        // base case
+        for(int i = 0; i < n; i++){
+            dp[i][i] = nums[i];
+        }
+        
+        for(int i = n-1; i >= 0; i--){
+            for(int j = i + 1; j < n; j++){
+                dp[i][j] = Math.max(nums[i]-dp[i+1][j], nums[j]-dp[i][j-1]);
+            }
+        }
+        
+        return dp[0][n-1] >= 0;
+    }
+}
+
+/*
+详解：
+If the current turn belongs to, say Player 1, we pick up an element, say xx, from either end, and give the turn to Player 2. Thus, if we obtain the score for the remaining elements(leaving xx), this score, now belongs to Player 2. Thus, since Player 2 is competing against Player 1, this score should be subtracted from Player 1's current(local) score(xx) to obtain the effective score of Player 1 at the current instant.
+
+这道题很像gan，因为保证了两个player同时都play optimally，
+所以如果定义从[i,j]进行选择的score为dp[i,j], 该score要么取nums[i]然后减掉对手从nums[i+1]到nums[j]选择的结果，要么取nums[j]然后减掉对手从nums[i]到nums[j-1]选择的结果
+
+那么dp[i][j] = Math.max(nums[i]-dp[i+1][j], nums[j]-dp[i][j-1]); 
+限制：i <= j
+*/
